@@ -1,0 +1,17 @@
+{
+  "article": {
+    "id": "1",
+    "title": "My Trip to Boulder Colorado",
+    "author": "Sean Kwon",
+    "sections": [
+      {
+        "type": "paragraph",
+        "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus metus felis, suscipit vel quam sit amet, lobortis volutpat eros. Nam ullamcorper purus nec mi mollis, id sagittis lectus cursus. Sed et enim accumsan, vehicula risus sed, malesuada leo. Ut ut maximus arcu. Sed aliquet rutrum tincidunt. Donec rutrum, mi vitae malesuada porttitor, tellus mauris pretium ex, quis vehicula eros mi ac elit. Vestibulum enim ante, mollis eget lorem at, rutrum auctor lorem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus aliquet elementum lacinia. Quisque cursus congue orci nec condimentum. Sed tempus quam vel neque porta, non aliquet magna ornare. Aenean justo leo, dignissim eu mattis sed, bibendum ac nibh."
+      },
+      {
+        "type": "image",
+        "content": "images/hello.jpg"
+      }
+    ]
+  }
+}
