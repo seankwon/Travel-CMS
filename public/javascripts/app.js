@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-/*
-const Section = ({}) => (
-  <div className='paragraph-container'>
-    <p>{this.props.text}</p>
-  </div>
-  );
-  */
+import sectionList from './presenters/sectionList';
 
-class Paragraph extends Component {
+class App extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
-    return <div className="paragraph-container">
-      <p>{this.props.text}</p>
-      {this.children}
-    </div>
+    return <div>hello world</div>
   }
 }
 
 ReactDOM.render(
-  <Paragraph text="Lorem Ipsum Delorum"/>,
+  <App text="Lorem Ipsum Delorum"/>,
   document.getElementById('journey')
 )
