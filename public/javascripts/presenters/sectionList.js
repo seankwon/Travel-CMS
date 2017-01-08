@@ -5,17 +5,11 @@ import Section from './section'
 class SectionList extends Component {
   constructor(props) {
     super(props)
-    let tempSections = props.section.map(el => {
-      <Section key={el.id} text={el.text} />
+    let tempSections = props.sections.map(el => {
+      return <Section key={el.id} text={el.text} />
     })
+    console.log(tempSections);
     this.state = {sections: tempSections};
-  }
-
-  addSection(text) {
-    let newSection = (<Section key={undefined} text={text} />)
-    this.setState((prevState, props) => ({
-      sections: [...this.prevState.sections, newSection]
-    }));
   }
 
   render() {
@@ -24,5 +18,6 @@ class SectionList extends Component {
     </div>)
   }
 }
+SectionList.displayName = 'SectionList'
 
 export default SectionList;
