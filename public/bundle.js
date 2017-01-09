@@ -21533,22 +21533,28 @@
 
 	    var _this = (0, _possibleConstructorReturn3['default'])(this, (Editor.__proto__ || (0, _getPrototypeOf2['default'])(Editor)).call(this, props));
 
-	    _this.state = { sections: _this.props.sections };
+	    _this.state = { sections: _this.props.sections, value: '' };
+
+	    _this.updateValue = _this.updateValue.bind(_this);
+	    _this.addSection = _this.addSection.bind(_this);
 	    return _this;
 	  }
 
 	  (0, _createClass3['default'])(Editor, [{
+	    key: 'updateValue',
+	    value: function () {
+	      function updateValue(event) {
+	        this.setState({ sections: this.state.sections, value: event.target.value });
+	      }
+
+	      return updateValue;
+	    }()
+	  }, {
 	    key: 'addSection',
 	    value: function () {
-	      function addSection(text) {
-	        var _this2 = this;
-
-	        var newSection = { text: text, id: Math.random() };
-	        this.setState(function (prevState, props) {
-	          return {
-	            sections: [].concat((0, _toConsumableArray3['default'])(_this2.prevState.sections), [newSection])
-	          };
-	        });
+	      function addSection() {
+	        var newSection = { text: this.state.value, id: Math.random() };
+	        this.setState({ sections: [].concat((0, _toConsumableArray3['default'])(this.state.sections), [newSection]), value: this.state.value });
 	      }
 
 	      return addSection;
@@ -21560,7 +21566,8 @@
 	        return _react2['default'].createElement(
 	          'div',
 	          null,
-	          _react2['default'].createElement('input', { type: 'text', className: 'add-section-input' }),
+	          _react2['default'].createElement('input', { onClick: this.addSection, className: 'submit-section', type: 'submit' }),
+	          _react2['default'].createElement('input', { value: this.state.value, onChange: this.updateValue, type: 'text', className: 'add-section-input' }),
 	          _react2['default'].createElement(_sectionList2['default'], { sections: this.state.sections })
 	        );
 	      }
@@ -21570,6 +21577,8 @@
 	  }]);
 	  return Editor;
 	}(_react.Component);
+
+	Editor.displayName = 'Editor';
 
 	exports['default'] = Editor;
 
@@ -23345,15 +23354,7 @@
 
 	  function SectionList(props) {
 	    (0, _classCallCheck3['default'])(this, SectionList);
-
-	    var _this = (0, _possibleConstructorReturn3['default'])(this, (SectionList.__proto__ || (0, _getPrototypeOf2['default'])(SectionList)).call(this, props));
-
-	    var tempSections = props.sections.map(function (el) {
-	      return _react2['default'].createElement(_section2['default'], { key: el.id, text: el.text });
-	    });
-	    console.log(tempSections);
-	    _this.state = { sections: tempSections };
-	    return _this;
+	    return (0, _possibleConstructorReturn3['default'])(this, (SectionList.__proto__ || (0, _getPrototypeOf2['default'])(SectionList)).call(this, props));
 	  }
 
 	  (0, _createClass3['default'])(SectionList, [{
@@ -23363,7 +23364,9 @@
 	        return _react2['default'].createElement(
 	          'div',
 	          { className: 'sectionList' },
-	          this.state.sections
+	          this.props.sections.map(function (el) {
+	            return _react2['default'].createElement(_section2['default'], { key: el.id, text: el.text });
+	          })
 	        );
 	      }
 
@@ -23441,6 +23444,8 @@
 	  }]);
 	  return Section;
 	}(_react.Component);
+
+	Section.displayName = 'Section';
 
 	exports['default'] = Section;
 

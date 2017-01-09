@@ -9,4 +9,6 @@ class Section extends Component {
   }
 }
 
+Section.displayName = 'Section'
+
 export default Section
