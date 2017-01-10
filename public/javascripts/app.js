@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
+import 'babel-polyfill';
+import 'isomorphic-fetch';
+import React from 'react';
 import ReactDOM from 'react-dom';
-/*
-const Section = ({}) => (
-  <div className='paragraph-container'>
-    <p>{this.props.text}</p>
-  </div>
-  );
-  */
 
-class Paragraph extends Component {
-  render() {
-    return <div className="paragraph-container">
-      <p>{this.props.text}</p>
-      {this.children}
-    </div>
-  }
-}
+import Main from './components/Main'
+import Article from './components/Article'
+
+import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+
+const router = (
+  <Router history={browserHistory}>
+    <Route path="/" component={Main}>
+      <IndexRoute component={Article}></IndexRoute>
+      //<Route path="/article/:article_id"></Route>
+    </Route>
+  </Router>
+)
 
 ReactDOM.render(
-  <Paragraph text="Lorem Ipsum Delorum"/>,
-  document.getElementById('journey')
+  router,
+  document.getElementById('root')
 )
