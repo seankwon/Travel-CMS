@@ -11,6 +11,11 @@ import configureStore from './configureStore';
 
 const store = configureStore();
 
+const root = (
+  <Router>
+  </Router>
+)
+
 ReactDOM.render(
   <Provider store={store}><VisibleArticleList /></Provider>,
   document.getElementById('root')
