@@ -12,7 +12,7 @@ router.get('/journey', (req, res, next) => {
 });
 
 router.get('/journeytest', (req, res, next) => {
-  res.sendFile(path.normalize(__dirname.replace('routes', '') + '/views/testviews/article.json'));
+  res.sendFile(path.normalize(__dirname.replace('routes', '') + '/views/testviews/articles.json'));
 });
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import requestArticles from '../actions/articleActions'
+import {requestArticles, fetchArticles} from '../actions/articleActions'
 
 class Article extends Component {
   render() {
@@ -9,25 +9,32 @@ class Article extends Component {
   }
 }
 
-//Assuming that state.articles is a json obj
-class ArticleList extends Component {
+export class ArticleList extends Component {
   constructor(props) {
     super(props)
   }
 
   componentDidMount() {
-    this.props.dispatch(requestArticles(2))
+    const { dispatch } = this.props;
+    dispatch(fetchArticles(2));
+  }
+
+  articlesExist() {
+    const {articles} = this.props;
+    return articles && articles.length > 0;
   }
 
   render() {
+    if (!this.articlesExist()) {
+      return <p>No Articles To Be Found</p>;
+    }
+
     return (
-			this.props.articles.map((article) =>
-				(<Article text={article.text} />)
-			)
-		)
+      <div>
+        {this.props.articles.map((article) =>
+          <Article key={article.id} text={article.title} />
+        )}
+      </div>
+    );
   }
 }
-
-//const mapStateToProps
-
-export default ArticleList

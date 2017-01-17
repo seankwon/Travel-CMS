@@ -9,13 +9,13 @@ export const requestArticles = (user_id) => ({
 export const receiveArticles = (user_id, json) => ({
   type: RECEIVE_ARTICLES,
   user_id,
-  articles: json.data.children.map(child => child.data),
+  articles: json.data.articles,
   receivedAt: Date.now()
 });
 
-function fetchArticles(user_id) {
+export function fetchArticles(user_id) {
   return (dispatch) => {
-    dispatch(requestsArticles(user_id));
+    dispatch(requestArticles(user_id));
 
     return fetch('users/journeytest')
       .then(response => response.json())

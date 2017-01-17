@@ -1,6 +1,7 @@
 import {REQUEST_ARTICLES, RECEIVE_ARTICLES} from '../actions/articleActions';
 
-function articles(state = {articles: [],
+function ArticlesReducer(state = {
+  articles: [],
   isFetching: false
 }, action) {
 
@@ -12,13 +13,11 @@ function articles(state = {articles: [],
     case RECEIVE_ARTICLES:
       return Object.assign({}, state, {
         isFetching: false,
-        items: action.articles,
-        last_Updated: action.receivedAt
+        articles: action.articles,
       });
+    default:
+      return state;
   }
-
-  return state;
 }
 
-var articlesReducer = articles;
-export default articlesReducer;
+export default ArticlesReducer;
