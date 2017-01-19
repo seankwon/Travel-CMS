@@ -11,7 +11,7 @@ class Article extends Component {
 
 export class ArticleList extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {

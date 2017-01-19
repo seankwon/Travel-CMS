@@ -74,7 +74,11 @@
 
 	var _VisibleArticleList2 = _interopRequireDefault(_VisibleArticleList);
 
-	var _configureStore = __webpack_require__(666);
+	var _layout = __webpack_require__(666);
+
+	var _layout2 = _interopRequireDefault(_layout);
+
+	var _configureStore = __webpack_require__(672);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -90,7 +94,11 @@
 	  _react2.default.createElement(
 	    _reactRouter.Router,
 	    { history: history },
-	    _react2.default.createElement(_reactRouter.Route, { path: '/', component: _VisibleArticleList2.default })
+	    _react2.default.createElement(
+	      _reactRouter.Route,
+	      { path: '/app', component: _layout2.default },
+	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _VisibleArticleList2.default })
+	    )
 	  )
 	);
 
@@ -39461,82 +39469,110 @@
 /* 666 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.default = configureStore;
 
-	var _redux = __webpack_require__(43);
+	var _extends2 = __webpack_require__(667);
 
-	var _reduxThunk = __webpack_require__(123);
+	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+	var _getPrototypeOf = __webpack_require__(579);
 
-	var _reduxLogger = __webpack_require__(124);
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+	var _classCallCheck2 = __webpack_require__(605);
 
-	var _articles = __webpack_require__(667);
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var _articles2 = _interopRequireDefault(_articles);
+	var _createClass2 = __webpack_require__(606);
 
-	var _reactRouterRedux = __webpack_require__(572);
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(610);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(657);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var loggerMiddleware = (0, _reduxLogger2.default)();
-	var reducers = (0, _redux.combineReducers)({
-	  ArticlesReducer: _articles2.default,
-	  routing: _reactRouterRedux.routerReducer
-	});
+	var Layout = function (_Component) {
+	  (0, _inherits3.default)(Layout, _Component);
 
-	function configureStore(preloadedState) {
-	  return (0, _redux.createStore)(reducers, preloadedState, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
-	}
+	  function Layout(props) {
+	    (0, _classCallCheck3.default)(this, Layout);
+	    return (0, _possibleConstructorReturn3.default)(this, (Layout.__proto__ || (0, _getPrototypeOf2.default)(Layout)).call(this, props));
+	  }
+
+	  (0, _createClass3.default)(Layout, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement("nav", { id: "main-menu" }),
+	        _react2.default.createElement(
+	          "section",
+	          { id: "main-content" },
+	          _react2.default.createElement(
+	            "div",
+	            null,
+	            _react2.default.cloneElement(this.props.children, (0, _extends3.default)({}, this.props, { key: undefined, ref: undefined }))
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	  return Layout;
+	}(_react.Component);
+	/*
+	<nav id="main-menu">
+	</nav>
+	<section id="main-content">
+	  <div id="root">
+	  </div>
+	  </section>
+	  */
+
+
+	exports.default = Layout;
 
 /***/ },
 /* 667 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _assign = __webpack_require__(668);
 
 	var _assign2 = _interopRequireDefault(_assign);
 
-	var _articleActions = __webpack_require__(665);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function ArticlesReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-	    articles: [],
-	    isFetching: false
-	  };
-	  var action = arguments[1];
+	exports.default = _assign2.default || function (target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i];
 
-	  switch (action.type) {
-	    case _articleActions.REQUEST_ARTICLES:
-	      return (0, _assign2.default)({}, state, {
-	        isFetching: true
-	      });
-	    case _articleActions.RECEIVE_ARTICLES:
-	      return (0, _assign2.default)({}, state, {
-	        isFetching: false,
-	        articles: action.articles
-	      });
-	    default:
-	      return state;
+	    for (var key in source) {
+	      if (Object.prototype.hasOwnProperty.call(source, key)) {
+	        target[key] = source[key];
+	      }
+	    }
 	  }
-	}
 
-	exports.default = ArticlesReducer;
+	  return target;
+	};
 
 /***/ },
 /* 668 */
@@ -39597,6 +39633,87 @@
 	    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
 	  } return T;
 	} : $assign;
+
+/***/ },
+/* 672 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = configureStore;
+
+	var _redux = __webpack_require__(43);
+
+	var _reduxThunk = __webpack_require__(123);
+
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+	var _reduxLogger = __webpack_require__(124);
+
+	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+
+	var _articles = __webpack_require__(673);
+
+	var _articles2 = _interopRequireDefault(_articles);
+
+	var _reactRouterRedux = __webpack_require__(572);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var loggerMiddleware = (0, _reduxLogger2.default)();
+	var reducers = (0, _redux.combineReducers)({
+	  ArticlesReducer: _articles2.default,
+	  routing: _reactRouterRedux.routerReducer
+	});
+
+	function configureStore(preloadedState) {
+	  return (0, _redux.createStore)(reducers, preloadedState, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
+	}
+
+/***/ },
+/* 673 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _assign = __webpack_require__(668);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
+	var _articleActions = __webpack_require__(665);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function ArticlesReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+	    articles: [],
+	    isFetching: false
+	  };
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case _articleActions.REQUEST_ARTICLES:
+	      return (0, _assign2.default)({}, state, {
+	        isFetching: true
+	      });
+	    case _articleActions.RECEIVE_ARTICLES:
+	      return (0, _assign2.default)({}, state, {
+	        isFetching: false,
+	        articles: action.articles
+	      });
+	    default:
+	      return state;
+	  }
+	}
+
+	exports.default = ArticlesReducer;
 
 /***/ }
 /******/ ]);
