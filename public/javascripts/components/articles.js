@@ -45,8 +45,11 @@ export class ArticleList extends Component {
 
     return (
       <div>
+        <h1>Articles</h1>
         {this.props.articles.map((article) =>
-          <Link key={article.id} to={`/app/article/${article.id}`}>{article.title}</Link>
+          <div className="article-link-container">
+            <Link key={article.id} to={`/app/article/${article.id}`}>{article.title}</Link>
+          </div>
         )}
       </div>
     );

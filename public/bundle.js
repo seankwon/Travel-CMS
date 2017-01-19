@@ -38044,11 +38044,20 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Articles'
+	        ),
 	        this.props.articles.map(function (article) {
 	          return _react2.default.createElement(
-	            _reactRouter.Link,
-	            { key: article.id, to: '/app/article/' + article.id },
-	            article.title
+	            'div',
+	            { className: 'article-link-container' },
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { key: article.id, to: '/app/article/' + article.id },
+	              article.title
+	            )
 	          );
 	        })
 	      );
@@ -39710,7 +39719,7 @@
 	          { id: "main-content" },
 	          _react2.default.createElement(
 	            "div",
-	            null,
+	            { className: "wrapper" },
 	            _react2.default.cloneElement(this.props.children, (0, _extends3.default)({}, this.props, { key: undefined, ref: undefined }))
 	          )
 	        )

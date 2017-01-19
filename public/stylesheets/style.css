@@ -38,3 +38,18 @@ a {
   clear: right;
   margin-left: 300px;
 }
+
+#main-content .wrapper {
+  padding: 20px;
+}
+
+#main-content .article-link-container {
+  border: 2px solid #ddd;
+  padding: 20px;
+  margin-bottom: 5px;
+}
+
+#main-content .article-link-container a {
+  font-size: 18px;
+  font-weight: 700;
+}

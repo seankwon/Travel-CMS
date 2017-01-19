@@ -10,7 +10,9 @@ export default class Layout extends Component {
       <div>
         <nav id="main-menu"></nav>
         <section id="main-content">
-          <div>{React.cloneElement(this.props.children, { ...this.props, key: undefined, ref: undefined })}</div>
+          <div className="wrapper">
+          {React.cloneElement(this.props.children, { ...this.props, key: undefined, ref: undefined })}
+          </div>
         </section>
       </div>
     );
