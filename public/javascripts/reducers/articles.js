@@ -4,7 +4,6 @@ function ArticlesReducer(state = {
   articles: [],
   isFetching: false
 }, action) {
-
   switch(action.type) {
     case REQUEST_ARTICLES:
       return Object.assign({}, state, {
