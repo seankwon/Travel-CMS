@@ -19,6 +19,19 @@ export const receiveArticles = (user_id, json) => ({
   receivedAt: Date.now()
 });
 
+export const fetchArticlesIfNeeded = (user_id) => {
+  let shouldFetchArticles = (state) => {
+    const { articles } = state.ArticlesReducer;
+    return (articles && articles.length < 1);
+  }
+
+  return (dispatch, getState) => {
+    if (shouldFetchArticles(getState())) {
+      dispatch(fetchArticles(user_id));
+    }
+  }
+};
+
 export function fetchArticles(user_id) {
   return (dispatch) => {
     dispatch(requestArticles(user_id));

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {requestArticles, fetchArticles, changeCurrentArticle} from '../actions/articleActions'
+import {requestArticles, fetchArticlesIfNeeded, changeCurrentArticle} from '../actions/articleActions'
 import {Link} from 'react-router'
 
 export class Article extends Component {
@@ -9,6 +9,7 @@ export class Article extends Component {
 
   componentWillMount() {
     const { dispatch } = this.props;
+    dispatch(fetchArticlesIfNeeded(2));
     dispatch(changeCurrentArticle(this.props.params.id));
   }
 
@@ -29,7 +30,7 @@ export class ArticleList extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchArticles(2));
+    dispatch(fetchArticlesIfNeeded(2));
   }
 
   articlesExist() {
@@ -45,7 +46,7 @@ export class ArticleList extends Component {
     return (
       <div>
         {this.props.articles.map((article) =>
-          <Link to={`/app/article/${article.id}`}>{article.title}</Link>
+          <Link key={article.id} to={`/app/article/${article.id}`}>{article.title}</Link>
         )}
       </div>
     );
