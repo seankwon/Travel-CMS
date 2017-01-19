@@ -1,8 +1,9 @@
-import {REQUEST_ARTICLES, RECEIVE_ARTICLES} from '../actions/articleActions';
+import {REQUEST_ARTICLES, RECEIVE_ARTICLES, CHANGE_CURRENT_ARTICLE} from '../actions/articleActions';
 
 function ArticlesReducer(state = {
   articles: [],
-  isFetching: false
+  isFetching: false,
+  activeArticleId: undefined
 }, action) {
   switch(action.type) {
     case REQUEST_ARTICLES:
@@ -12,7 +13,11 @@ function ArticlesReducer(state = {
     case RECEIVE_ARTICLES:
       return Object.assign({}, state, {
         isFetching: false,
-        articles: action.articles,
+        articles: action.articles
+      });
+    case CHANGE_CURRENT_ARTICLE:
+      return Object.assign({}, state, {
+        activeArticleId: action.articleId
       });
     default:
       return state;

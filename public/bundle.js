@@ -78,6 +78,10 @@
 
 	var _layout2 = _interopRequireDefault(_layout);
 
+	var _VisibleArticle = __webpack_require__(674);
+
+	var _VisibleArticle2 = _interopRequireDefault(_VisibleArticle);
+
 	var _configureStore = __webpack_require__(672);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
@@ -85,9 +89,12 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var store = (0, _configureStore2.default)();
-	//import {ArticleList} from './components/articles';
-
 	var history = (0, _reactRouterRedux.syncHistoryWithStore)(_reactRouter.browserHistory, store);
+
+	history.listen(function (location) {
+	  //if (location.pathname.includes('article'))
+	});
+
 	var root = _react2.default.createElement(
 	  _reactRedux.Provider,
 	  { store: store },
@@ -97,7 +104,8 @@
 	    _react2.default.createElement(
 	      _reactRouter.Route,
 	      { path: '/app', component: _layout2.default },
-	      _react2.default.createElement(_reactRouter.IndexRoute, { component: _VisibleArticleList2.default })
+	      _react2.default.createElement(_reactRouter.Route, { path: 'articles', component: _VisibleArticleList2.default }),
+	      _react2.default.createElement(_reactRouter.Route, { path: 'article/:id', component: _VisibleArticle2.default })
 	    )
 	  )
 	);
@@ -37798,7 +37806,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ArticleList = undefined;
+	exports.ArticleList = exports.Article = undefined;
 
 	var _getPrototypeOf = __webpack_require__(579);
 
@@ -37826,23 +37834,39 @@
 
 	var _articleActions = __webpack_require__(665);
 
+	var _reactRouter = __webpack_require__(70);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Article = function (_Component) {
+	var Article = exports.Article = function (_Component) {
 	  (0, _inherits3.default)(Article, _Component);
 
-	  function Article() {
+	  function Article(props) {
 	    (0, _classCallCheck3.default)(this, Article);
-	    return (0, _possibleConstructorReturn3.default)(this, (Article.__proto__ || (0, _getPrototypeOf2.default)(Article)).apply(this, arguments));
+	    return (0, _possibleConstructorReturn3.default)(this, (Article.__proto__ || (0, _getPrototypeOf2.default)(Article)).call(this, props));
 	  }
 
 	  (0, _createClass3.default)(Article, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var dispatch = this.props.dispatch;
+
+	      dispatch((0, _articleActions.changeCurrentArticle)(this.props.params.id));
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      if (!this.props || !this.props.article) {
+	        return _react2.default.createElement(
+	          'p',
+	          null,
+	          'Nope'
+	        );
+	      }
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        this.props.text
+	        this.props.article.content
 	      );
 	    }
 	  }]);
@@ -37886,7 +37910,11 @@
 	        'div',
 	        null,
 	        this.props.articles.map(function (article) {
-	          return _react2.default.createElement(Article, { key: article.id, text: article.title });
+	          return _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/app/article/' + article.id },
+	            article.title
+	          );
 	        })
 	      );
 	    }
@@ -39436,6 +39464,14 @@
 	exports.fetchArticles = fetchArticles;
 	var REQUEST_ARTICLES = exports.REQUEST_ARTICLES = 'REQUEST_ARTICLES';
 	var RECEIVE_ARTICLES = exports.RECEIVE_ARTICLES = 'RECEIVE_ARTICLES';
+	var CHANGE_CURRENT_ARTICLE = exports.CHANGE_CURRENT_ARTICLE = 'CHANGE_CURRENT_ARTICLE';
+
+	var changeCurrentArticle = exports.changeCurrentArticle = function changeCurrentArticle(articleId) {
+	  return {
+	    type: CHANGE_CURRENT_ARTICLE,
+	    articleId: articleId
+	  };
+	};
 
 	var requestArticles = exports.requestArticles = function requestArticles(user_id) {
 	  return {
@@ -39457,7 +39493,7 @@
 	  return function (dispatch) {
 	    dispatch(requestArticles(user_id));
 
-	    return fetch('users/journeytest').then(function (response) {
+	    return fetch('/users/journeytest').then(function (response) {
 	      return response.json();
 	    }).then(function (json) {
 	      return dispatch(receiveArticles(user_id, json));
@@ -39694,7 +39730,8 @@
 	function ArticlesReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
 	    articles: [],
-	    isFetching: false
+	    isFetching: false,
+	    activeArticleId: undefined
 	  };
 	  var action = arguments[1];
 
@@ -39708,12 +39745,50 @@
 	        isFetching: false,
 	        articles: action.articles
 	      });
+	    case _articleActions.CHANGE_CURRENT_ARTICLE:
+	      return (0, _assign2.default)({}, state, {
+	        activeArticleId: action.articleId
+	      });
 	    default:
 	      return state;
 	  }
 	}
 
 	exports.default = ArticlesReducer;
+
+/***/ },
+/* 674 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _articles = __webpack_require__(578);
+
+	var _reactRedux = __webpack_require__(32);
+
+	var getArticle = function getArticle(state) {
+	  var _state$ArticlesReduce = state.ArticlesReducer,
+	      articles = _state$ArticlesReduce.articles,
+	      activeArticleId = _state$ArticlesReduce.activeArticleId;
+
+	  console.log(state.ArticlesReducer);
+	  return articles.find(function (element) {
+	    return element.id === activeArticleId + '';
+	  });
+	};
+
+	function mapStateToProps(state) {
+	  var article = getArticle(state) || undefined;
+	  return {
+	    article: article
+	  };
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(_articles.Article);
 
 /***/ }
 /******/ ]);

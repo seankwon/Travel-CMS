@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import {requestArticles, fetchArticles} from '../actions/articleActions'
+import {requestArticles, fetchArticles, changeCurrentArticle} from '../actions/articleActions'
+import {Link} from 'react-router'
 
-class Article extends Component {
+export class Article extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch(changeCurrentArticle(this.props.params.id));
+  }
+
   render() {
+    if (!this.props || !this.props.article) {
+      return <p>Nope</p>
+    }
     return (
-      <div>{this.props.text}</div>
+      <div>{this.props.article.content}</div>
     )
   }
 }
@@ -32,7 +45,7 @@ export class ArticleList extends Component {
     return (
       <div>
         {this.props.articles.map((article) =>
-          <Article key={article.id} text={article.title} />
+          <Link to={`/app/article/${article.id}`}>{article.title}</Link>
         )}
       </div>
     );

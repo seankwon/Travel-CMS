@@ -8,16 +8,22 @@ import 'babel-polyfill';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import VisibleArticleList from './containers/VisibleArticleList';
 import Layout from './components/layout';
-//import {ArticleList} from './components/articles';
+import VisibleArticle from './containers/VisibleArticle';
 import configureStore from './configureStore';
 
 const store = configureStore();
 const history = syncHistoryWithStore(browserHistory, store);
+
+history.listen((location) => {
+  //if (location.pathname.includes('article'))
+});
+
 const root = (
   <Provider store={store}>
 		<Router history={history}>
       <Route path="/app" component={Layout}>
-        <IndexRoute component={VisibleArticleList}></IndexRoute>
+        <Route path="articles" component={VisibleArticleList}></Route>
+        <Route path="article/:id" component={VisibleArticle}></Route>
       </Route>
     </Router>
   </Provider>
