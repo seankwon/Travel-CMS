@@ -86,7 +86,7 @@
 
 	var _Editor2 = _interopRequireDefault(_Editor);
 
-	var _configureStore = __webpack_require__(674);
+	var _configureStore = __webpack_require__(688);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -38057,7 +38057,12 @@
 	              article.title
 	            )
 	          );
-	        })
+	        }),
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/app/newarticle' },
+	          'New Article'
+	        )
 	      );
 	    }
 	  }]);
@@ -39869,9 +39874,36 @@
 	  value: true
 	});
 
-	var _assign = __webpack_require__(668);
+	var _editor = __webpack_require__(674);
 
-	var _assign2 = _interopRequireDefault(_assign);
+	var _editor2 = _interopRequireDefault(_editor);
+
+	var _reactRedux = __webpack_require__(32);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var mapStateToProps = function mapStateToProps(state) {
+	  var _state$editor = state.editor,
+	      sections = _state$editor.sections,
+	      isSaving = _state$editor.isSaving;
+
+	  return {
+	    sections: sections,
+	    isSaving: isSaving
+	  };
+	};
+
+	exports.default = (0, _reactRedux.connect)(mapStateToProps)(_editor2.default);
+
+/***/ },
+/* 674 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _getPrototypeOf = __webpack_require__(579);
 
@@ -39893,45 +39925,47 @@
 
 	var _inherits3 = _interopRequireDefault(_inherits2);
 
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
 	var _reactDom = __webpack_require__(130);
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _reactDragula = __webpack_require__(676);
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDragula = __webpack_require__(675);
 
 	var _reactDragula2 = _interopRequireDefault(_reactDragula);
 
-	var _articleActions = __webpack_require__(665);
+	var _redux = __webpack_require__(43);
+
+	var _editorActions = __webpack_require__(687);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function invalidTarget(el, handle) {
-	  return el.className === 'textbox-content';
-	}
 
 	var TextBox = function (_Component) {
 	  (0, _inherits3.default)(TextBox, _Component);
 
-	  function TextBox() {
+	  function TextBox(props) {
 	    (0, _classCallCheck3.default)(this, TextBox);
-	    return (0, _possibleConstructorReturn3.default)(this, (TextBox.__proto__ || (0, _getPrototypeOf2.default)(TextBox)).apply(this, arguments));
+	    return (0, _possibleConstructorReturn3.default)(this, (TextBox.__proto__ || (0, _getPrototypeOf2.default)(TextBox)).call(this, props));
 	  }
 
 	  (0, _createClass3.default)(TextBox, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var pTag = _reactDom2.default.findDOMNode(this).querySelector('.textbox-content');
+	      var _props = this.props,
+	          index = _props.index,
+	          dispatch = _props.dispatch;
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'textbox' },
-	        _react2.default.createElement(
-	          'p',
-	          { className: 'textbox-content', contentEditable: 'true' },
-	          this.props.children
-	        )
+	        _react2.default.createElement('input', { type: 'text', className: 'textbox-content', value: this.props.children })
 	      );
 	    }
 	  }]);
@@ -39946,8 +39980,7 @@
 
 	    var _this2 = (0, _possibleConstructorReturn3.default)(this, (Editor.__proto__ || (0, _getPrototypeOf2.default)(Editor)).call(this, props));
 
-	    _this2.handleChange = _this2.handleChange.bind(_this2);
-	    _this2.state = (0, _assign2.default)({}, props);
+	    _this2.addSection = _this2.addSection.bind(_this2);
 	    return _this2;
 	  }
 
@@ -39955,33 +39988,58 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var container = _reactDom2.default.findDOMNode(this);
+	      var dispatch = this.props.dispatch;
+
+	      dispatch((0, _editorActions.addSection)(2));
+
 	      (0, _reactDragula2.default)([container]).on('drop', function (el) {
 	        console.log('Target to call update');
 	      });
 	    }
 	  }, {
-	    key: 'handleChange',
-	    value: function handleChange(e) {
-	      this.setState({ value: e.value });
+	    key: 'addSection',
+	    value: function addSection() {
+	      var _props2 = this.props,
+	          dispatch = _props2.dispatch,
+	          sections = _props2.sections;
+
+	      dispatch((0, _editorActions.addSection)(2));
+	    }
+	  }, {
+	    key: 'sectionsDontExist',
+	    value: function sectionsDontExist() {
+	      return !this.props.sections || this.props.sections.length < 1;
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var button = _react2.default.createElement(
+	        'button',
+	        { id: 'addSection', className: 'btn', onClick: this.addSection },
+	        'Add Section'
+	      );
+
+	      if (this.sectionsDontExist()) {
+	        return _react2.default.createElement(
+	          'div',
+	          { className: 'editor-container' },
+	          _react2.default.createElement(TextBox, { key: 0, index: 0 }),
+	          button
+	        );
+	      }
+
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'editor-container' },
-	        _react2.default.createElement(
-	          TextBox,
-	          null,
-	          'Hi'
-	        ),
-	        _react2.default.createElement(
-	          TextBox,
-	          null,
-	          'Hello'
-	        )
+	        this.props.sections.map(function (sectionText, idx) {
+	          return _react2.default.createElement(
+	            TextBox,
+	            { index: idx, key: idx },
+	            sectionText
+	          );
+	        }),
+	        button
 	      );
-	      //return <input onChange={this.handleChange} type="text"/>;
 	    }
 	  }]);
 	  return Editor;
@@ -39990,99 +40048,13 @@
 	exports.default = Editor;
 
 /***/ },
-/* 674 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = configureStore;
-
-	var _redux = __webpack_require__(43);
-
-	var _reduxThunk = __webpack_require__(123);
-
-	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-
-	var _reduxLogger = __webpack_require__(124);
-
-	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
-
-	var _articles = __webpack_require__(675);
-
-	var _articles2 = _interopRequireDefault(_articles);
-
-	var _reactRouterRedux = __webpack_require__(572);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var loggerMiddleware = (0, _reduxLogger2.default)();
-	var reducers = (0, _redux.combineReducers)({
-	  ArticlesReducer: _articles2.default,
-	  routing: _reactRouterRedux.routerReducer
-	});
-
-	function configureStore(preloadedState) {
-	  return (0, _redux.createStore)(reducers, preloadedState, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
-	}
-
-/***/ },
 /* 675 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _assign = __webpack_require__(668);
-
-	var _assign2 = _interopRequireDefault(_assign);
-
-	var _articleActions = __webpack_require__(665);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function ArticlesReducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-	    articles: [],
-	    isFetching: false,
-	    activeArticleId: undefined
-	  };
-	  var action = arguments[1];
-
-	  switch (action.type) {
-	    case _articleActions.REQUEST_ARTICLES:
-	      return (0, _assign2.default)({}, state, {
-	        isFetching: true
-	      });
-	    case _articleActions.RECEIVE_ARTICLES:
-	      return (0, _assign2.default)({}, state, {
-	        isFetching: false,
-	        articles: action.articles
-	      });
-	    case _articleActions.CHANGE_CURRENT_ARTICLE:
-	      return (0, _assign2.default)({}, state, {
-	        activeArticleId: action.articleId
-	      });
-	    default:
-	      return state;
-	  }
-	}
-
-	exports.default = ArticlesReducer;
-
-/***/ },
-/* 676 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var dragula = __webpack_require__(677);
-	var atoa = __webpack_require__(679);
+	var dragula = __webpack_require__(676);
+	var atoa = __webpack_require__(678);
 
 	function reactDragula () {
 	  return dragula.apply(this, atoa(arguments)).on('cloned', cloned);
@@ -40101,14 +40073,14 @@
 
 
 /***/ },
-/* 677 */
+/* 676 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var emitter = __webpack_require__(678);
-	var crossvent = __webpack_require__(684);
-	var classes = __webpack_require__(687);
+	var emitter = __webpack_require__(677);
+	var crossvent = __webpack_require__(683);
+	var classes = __webpack_require__(686);
 	var doc = document;
 	var documentElement = doc.documentElement;
 
@@ -40716,13 +40688,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 678 */
+/* 677 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var atoa = __webpack_require__(679);
-	var debounce = __webpack_require__(680);
+	var atoa = __webpack_require__(678);
+	var debounce = __webpack_require__(679);
 
 	module.exports = function emitter (thing, options) {
 	  var opts = options || {};
@@ -40776,19 +40748,19 @@
 
 
 /***/ },
-/* 679 */
+/* 678 */
 /***/ function(module, exports) {
 
 	module.exports = function atoa (a, n) { return Array.prototype.slice.call(a, n); }
 
 
 /***/ },
-/* 680 */
+/* 679 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ticky = __webpack_require__(681);
+	var ticky = __webpack_require__(680);
 
 	module.exports = function debounce (fn, args, ctx) {
 	  if (!fn) { return; }
@@ -40799,7 +40771,7 @@
 
 
 /***/ },
-/* 681 */
+/* 680 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate) {var si = typeof setImmediate === 'function', tick;
@@ -40810,10 +40782,10 @@
 	}
 
 	module.exports = tick;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(682).setImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(681).setImmediate))
 
 /***/ },
-/* 682 */
+/* 681 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var apply = Function.prototype.apply;
@@ -40866,13 +40838,13 @@
 	};
 
 	// setimmediate attaches itself to the global object
-	__webpack_require__(683);
+	__webpack_require__(682);
 	exports.setImmediate = setImmediate;
 	exports.clearImmediate = clearImmediate;
 
 
 /***/ },
-/* 683 */
+/* 682 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -41065,13 +41037,13 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(3)))
 
 /***/ },
-/* 684 */
+/* 683 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var customEvent = __webpack_require__(685);
-	var eventmap = __webpack_require__(686);
+	var customEvent = __webpack_require__(684);
+	var eventmap = __webpack_require__(685);
 	var doc = global.document;
 	var addEvent = addEventEasy;
 	var removeEvent = removeEventEasy;
@@ -41173,7 +41145,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 685 */
+/* 684 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -41228,7 +41200,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 686 */
+/* 685 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -41248,7 +41220,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 687 */
+/* 686 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -41285,6 +41257,376 @@
 	  rm: rmClass
 	};
 
+
+/***/ },
+/* 687 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var ADD_SECTION = exports.ADD_SECTION = 'ADD_SECTION';
+	var UPDATE_SECTIONS = exports.UPDATE_SECTIONS = 'UPDATE_SECTIONS';
+	var UPDATE_SECTION = exports.UPDATE_SECTION = 'UPDATE_SECTION';
+
+	var updateSections = exports.updateSections = function updateSections(sections) {
+	  return {
+	    type: UPDATE_SECTIONS,
+	    sections: sections
+	  };
+	};
+
+	var updateSection = exports.updateSection = function updateSection(index, text) {
+	  return {
+	    type: UPDATE_SECTION,
+	    index: index,
+	    text: text
+	  };
+	};
+
+	var addSection = exports.addSection = function addSection(id) {
+	  return {
+	    type: ADD_SECTION,
+	    id: id
+	  };
+	};
+
+/***/ },
+/* 688 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = configureStore;
+
+	var _redux = __webpack_require__(43);
+
+	var _reduxThunk = __webpack_require__(123);
+
+	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+	var _reduxLogger = __webpack_require__(124);
+
+	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+
+	var _articles = __webpack_require__(689);
+
+	var _articles2 = _interopRequireDefault(_articles);
+
+	var _Editor = __webpack_require__(690);
+
+	var _Editor2 = _interopRequireDefault(_Editor);
+
+	var _reactRouterRedux = __webpack_require__(572);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var loggerMiddleware = (0, _reduxLogger2.default)();
+	var reducers = (0, _redux.combineReducers)({
+	  editor: _Editor2.default,
+	  ArticlesReducer: _articles2.default,
+	  routing: _reactRouterRedux.routerReducer
+	});
+
+	function configureStore(preloadedState) {
+	  return (0, _redux.createStore)(reducers, preloadedState, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
+	}
+
+/***/ },
+/* 689 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _assign = __webpack_require__(668);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
+	var _articleActions = __webpack_require__(665);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function ArticlesReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+	    articles: [],
+	    isFetching: false,
+	    activeArticleId: undefined
+	  };
+	  var action = arguments[1];
+
+	  switch (action.type) {
+	    case _articleActions.REQUEST_ARTICLES:
+	      return (0, _assign2.default)({}, state, {
+	        isFetching: true
+	      });
+	    case _articleActions.RECEIVE_ARTICLES:
+	      return (0, _assign2.default)({}, state, {
+	        isFetching: false,
+	        articles: action.articles
+	      });
+	    case _articleActions.CHANGE_CURRENT_ARTICLE:
+	      return (0, _assign2.default)({}, state, {
+	        activeArticleId: action.articleId
+	      });
+	    default:
+	      return state;
+	  }
+	}
+
+	exports.default = ArticlesReducer;
+
+/***/ },
+/* 690 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _toConsumableArray2 = __webpack_require__(691);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	var _assign = __webpack_require__(668);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
+	var _editorActions = __webpack_require__(687);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var editor = function editor() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+	    sections: [],
+	    isSaving: false
+	  };
+	  var action = arguments[1];
+	  var sections = state.sections;
+
+	  switch (action.type) {
+	    case _editorActions.ADD_SECTION:
+	      return (0, _assign2.default)({}, state, { sections: [].concat((0, _toConsumableArray3.default)(sections), ['']) });
+	    case _editorActions.UPDATE_SECTIONS:
+	      return (0, _assign2.default)({}, state, { sections: sections });
+	    case _editorActions.UPDATE_SECTION:
+	      //clone array, then update cloned array
+	      var newSections = sections.slice(0);
+	      var index = action.index,
+	          text = action.text;
+
+	      newSection[action] = text;
+
+	      return (0, _assign2.default)({}, state, { sections: newSections });
+	    default:
+	      return state;
+	  }
+	};
+
+	exports.default = editor;
+
+/***/ },
+/* 691 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _from = __webpack_require__(692);
+
+	var _from2 = _interopRequireDefault(_from);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (arr) {
+	  if (Array.isArray(arr)) {
+	    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+	      arr2[i] = arr[i];
+	    }
+
+	    return arr2;
+	  } else {
+	    return (0, _from2.default)(arr);
+	  }
+	};
+
+/***/ },
+/* 692 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(693), __esModule: true };
+
+/***/ },
+/* 693 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(614);
+	__webpack_require__(694);
+	module.exports = __webpack_require__(592).Array.from;
+
+/***/ },
+/* 694 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var ctx            = __webpack_require__(593)
+	  , $export        = __webpack_require__(591)
+	  , toObject       = __webpack_require__(582)
+	  , call           = __webpack_require__(695)
+	  , isArrayIter    = __webpack_require__(696)
+	  , toLength       = __webpack_require__(630)
+	  , createProperty = __webpack_require__(697)
+	  , getIterFn      = __webpack_require__(698);
+
+	$export($export.S + $export.F * !__webpack_require__(700)(function(iter){ Array.from(iter); }), 'Array', {
+	  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
+	  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
+	    var O       = toObject(arrayLike)
+	      , C       = typeof this == 'function' ? this : Array
+	      , aLen    = arguments.length
+	      , mapfn   = aLen > 1 ? arguments[1] : undefined
+	      , mapping = mapfn !== undefined
+	      , index   = 0
+	      , iterFn  = getIterFn(O)
+	      , length, result, step, iterator;
+	    if(mapping)mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+	    // if object isn't iterable or it's array with default iterator - use simple case
+	    if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
+	      for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
+	        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+	      }
+	    } else {
+	      length = toLength(O.length);
+	      for(result = new C(length); length > index; index++){
+	        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+	      }
+	    }
+	    result.length = index;
+	    return result;
+	  }
+	});
+
+
+/***/ },
+/* 695 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// call something on iterator step with safe closing on error
+	var anObject = __webpack_require__(597);
+	module.exports = function(iterator, fn, value, entries){
+	  try {
+	    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+	  // 7.4.6 IteratorClose(iterator, completion)
+	  } catch(e){
+	    var ret = iterator['return'];
+	    if(ret !== undefined)anObject(ret.call(iterator));
+	    throw e;
+	  }
+	};
+
+/***/ },
+/* 696 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// check on default Array iterator
+	var Iterators  = __webpack_require__(620)
+	  , ITERATOR   = __webpack_require__(635)('iterator')
+	  , ArrayProto = Array.prototype;
+
+	module.exports = function(it){
+	  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
+	};
+
+/***/ },
+/* 697 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var $defineProperty = __webpack_require__(596)
+	  , createDesc      = __webpack_require__(604);
+
+	module.exports = function(object, index, value){
+	  if(index in object)$defineProperty.f(object, index, createDesc(0, value));
+	  else object[index] = value;
+	};
+
+/***/ },
+/* 698 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var classof   = __webpack_require__(699)
+	  , ITERATOR  = __webpack_require__(635)('iterator')
+	  , Iterators = __webpack_require__(620);
+	module.exports = __webpack_require__(592).getIteratorMethod = function(it){
+	  if(it != undefined)return it[ITERATOR]
+	    || it['@@iterator']
+	    || Iterators[classof(it)];
+	};
+
+/***/ },
+/* 699 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// getting tag from 19.1.3.6 Object.prototype.toString()
+	var cof = __webpack_require__(628)
+	  , TAG = __webpack_require__(635)('toStringTag')
+	  // ES3 wrong here
+	  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
+
+	// fallback for IE11 Script Access Denied error
+	var tryGet = function(it, key){
+	  try {
+	    return it[key];
+	  } catch(e){ /* empty */ }
+	};
+
+	module.exports = function(it){
+	  var O, T, B;
+	  return it === undefined ? 'Undefined' : it === null ? 'Null'
+	    // @@toStringTag case
+	    : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
+	    // builtinTag case
+	    : ARG ? cof(O)
+	    // ES3 arguments fallback
+	    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+	};
+
+/***/ },
+/* 700 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ITERATOR     = __webpack_require__(635)('iterator')
+	  , SAFE_CLOSING = false;
+
+	try {
+	  var riter = [7][ITERATOR]();
+	  riter['return'] = function(){ SAFE_CLOSING = true; };
+	  Array.from(riter, function(){ throw 2; });
+	} catch(e){ /* empty */ }
+
+	module.exports = function(exec, skipClosing){
+	  if(!skipClosing && !SAFE_CLOSING)return false;
+	  var safe = false;
+	  try {
+	    var arr  = [7]
+	      , iter = arr[ITERATOR]();
+	    iter.next = function(){ return {done: safe = true}; };
+	    arr[ITERATOR] = function(){ return iter; };
+	    exec(arr);
+	  } catch(e){ /* empty */ }
+	  return safe;
+	};
 
 /***/ }
 /******/ ]);

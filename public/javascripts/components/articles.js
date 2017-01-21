@@ -51,6 +51,7 @@ export class ArticleList extends Component {
             <Link key={article.id} to={`/app/article/${article.id}`}>{article.title}</Link>
           </div>
         )}
+        <Link to='/app/newarticle'>New Article</Link>
       </div>
     );
   }
