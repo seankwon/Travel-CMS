@@ -39948,16 +39948,19 @@
 
 	  function TextBox(props) {
 	    (0, _classCallCheck3.default)(this, TextBox);
-	    return (0, _possibleConstructorReturn3.default)(this, (TextBox.__proto__ || (0, _getPrototypeOf2.default)(TextBox)).call(this, props));
+
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (TextBox.__proto__ || (0, _getPrototypeOf2.default)(TextBox)).call(this, props));
+
+	    _this.state = { value: _this.props.children };
+
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    return _this;
 	  }
 
 	  (0, _createClass3.default)(TextBox, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var pTag = _reactDom2.default.findDOMNode(this).querySelector('.textbox-content');
-	      var _props = this.props,
-	          index = _props.index,
-	          dispatch = _props.dispatch;
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      this.setState({ value: e.value });
 	    }
 	  }, {
 	    key: 'render',
@@ -39965,7 +39968,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'textbox' },
-	        _react2.default.createElement('input', { type: 'text', className: 'textbox-content', value: this.props.children })
+	        _react2.default.createElement('input', { onChange: this.handleChange, type: 'text', className: 'textbox-content', value: this.state.value })
 	      );
 	    }
 	  }]);
@@ -39981,27 +39984,46 @@
 	    var _this2 = (0, _possibleConstructorReturn3.default)(this, (Editor.__proto__ || (0, _getPrototypeOf2.default)(Editor)).call(this, props));
 
 	    _this2.addSection = _this2.addSection.bind(_this2);
+	    _this2.saveSections = _this2.saveSections.bind(_this2);
 	    return _this2;
 	  }
 
 	  (0, _createClass3.default)(Editor, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      var _this3 = this;
+
 	      var container = _reactDom2.default.findDOMNode(this);
+	      //Add initial section
 	      var dispatch = this.props.dispatch;
 
 	      dispatch((0, _editorActions.addSection)(2));
 
 	      (0, _reactDragula2.default)([container]).on('drop', function (el) {
-	        console.log('Target to call update');
+	        var sections = _this3.getSectionTexts();
+	        _this3.props.dispatch((0, _editorActions.saveSections)(sections, 2));
 	      });
+	    }
+	  }, {
+	    key: 'getSectionTexts',
+	    value: function getSectionTexts() {
+	      var sectionTexts = [].slice.call(_reactDom2.default.findDOMNode(this).getElementsByClassName('textbox-content'));
+	      return sectionTexts.map(function (section) {
+	        return section.value;
+	      });
+	    }
+	  }, {
+	    key: 'saveSections',
+	    value: function saveSections() {
+	      var sections = this.getSectionTexts();
+	      this.props.dispatch((0, _editorActions.saveSections)(sections, 2));
 	    }
 	  }, {
 	    key: 'addSection',
 	    value: function addSection() {
-	      var _props2 = this.props,
-	          dispatch = _props2.dispatch,
-	          sections = _props2.sections;
+	      var _props = this.props,
+	          dispatch = _props.dispatch,
+	          sections = _props.sections;
 
 	      dispatch((0, _editorActions.addSection)(2));
 	    }
@@ -40013,10 +40035,15 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var button = _react2.default.createElement(
+	      var addButton = _react2.default.createElement(
 	        'button',
 	        { id: 'addSection', className: 'btn', onClick: this.addSection },
 	        'Add Section'
+	      );
+	      var saveButton = _react2.default.createElement(
+	        'button',
+	        { id: 'saveSections', onClick: this.saveSections, className: 'btn' },
+	        'Save'
 	      );
 
 	      if (this.sectionsDontExist()) {
@@ -40024,7 +40051,8 @@
 	          'div',
 	          { className: 'editor-container' },
 	          _react2.default.createElement(TextBox, { key: 0, index: 0 }),
-	          button
+	          addButton,
+	          saveButton
 	        );
 	      }
 
@@ -40038,7 +40066,8 @@
 	            sectionText
 	          );
 	        }),
-	        button
+	        addButton,
+	        saveButton
 	      );
 	    }
 	  }]);
@@ -41270,6 +41299,7 @@
 	var ADD_SECTION = exports.ADD_SECTION = 'ADD_SECTION';
 	var UPDATE_SECTIONS = exports.UPDATE_SECTIONS = 'UPDATE_SECTIONS';
 	var UPDATE_SECTION = exports.UPDATE_SECTION = 'UPDATE_SECTION';
+	var SAVE_SECTIONS = exports.SAVE_SECTIONS = 'SAVE_SECTIONS';
 
 	var updateSections = exports.updateSections = function updateSections(sections) {
 	  return {
@@ -41283,6 +41313,14 @@
 	    type: UPDATE_SECTION,
 	    index: index,
 	    text: text
+	  };
+	};
+
+	var saveSections = exports.saveSections = function saveSections(sections, user_id) {
+	  return {
+	    type: SAVE_SECTIONS,
+	    user_id: user_id,
+	    sections: sections
 	  };
 	};
 
@@ -41426,8 +41464,9 @@
 	          text = action.text;
 
 	      newSection[action] = text;
-
 	      return (0, _assign2.default)({}, state, { sections: newSections });
+	    case _editorActions.SAVE_SECTIONS:
+	      return (0, _assign2.default)({}, state, { sections: action.sections });
 	    default:
 	      return state;
 	  }
