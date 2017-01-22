@@ -2,10 +2,90 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+h1, h2, h3, h4, h5, h6, p, a, span, div, header, section {
+  font-family: 'Overpass', sans-serif;
+}
+
 a {
   color: #00B7FF;
 }
 
+#main-header {
+  width: 100%;
+  padding: 10px;
+  background: #39CCCC;
+}
+
+#main-header h2 {
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+}
+
 .container-fluid {
   padding: 0;
+}
+
+#main-menu {
+  position: absolute;
+  width: 300px;
+  height: 100%;
+  float: left;
+  background: #eee;
+}
+
+#main-content {
+  clear: right;
+  margin-left: 300px;
+}
+
+#main-content .wrapper {
+  padding: 20px;
+}
+
+#main-content .article-link-container {
+  border: 2px solid #ddd;
+  padding: 20px;
+  margin-bottom: 5px;
+}
+
+#main-content .article-link-container a {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.editor-container .textbox .textbox-content {
+  font-size: 14px;
+}
+
+.editor-container .textbox {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+/*
+Dragula Styles
+*/
+
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+}
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
 }
