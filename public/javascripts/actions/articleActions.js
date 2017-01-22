@@ -21,7 +21,7 @@ export const receiveArticles = (user_id, json) => ({
 
 export const fetchArticlesIfNeeded = (user_id) => {
   let shouldFetchArticles = (state) => {
-    const { articles } = state.ArticlesReducer;
+    const { articles } = state.articles;
     return (articles && articles.length < 1);
   }
 

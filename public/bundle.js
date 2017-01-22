@@ -86,7 +86,7 @@
 
 	var _Editor2 = _interopRequireDefault(_Editor);
 
-	var _configureStore = __webpack_require__(688);
+	var _configureStore = __webpack_require__(689);
 
 	var _configureStore2 = _interopRequireDefault(_configureStore);
 
@@ -37913,7 +37913,7 @@
 	var _reactRedux = __webpack_require__(32);
 
 	var getArticlesData = function getArticlesData(state) {
-	  return state.ArticlesReducer;
+	  return state.articles;
 	};
 
 	function mapStateToProps(state) {
@@ -39638,7 +39638,7 @@
 
 	var fetchArticlesIfNeeded = exports.fetchArticlesIfNeeded = function fetchArticlesIfNeeded(user_id) {
 	  var shouldFetchArticles = function shouldFetchArticles(state) {
-	    var articles = state.ArticlesReducer.articles;
+	    var articles = state.articles.articles;
 
 	    return articles && articles.length < 1;
 	  };
@@ -39666,7 +39666,7 @@
 /* 666 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -39700,6 +39700,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRouter = __webpack_require__(70);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Layout = function (_Component) {
@@ -39711,18 +39713,26 @@
 	  }
 
 	  (0, _createClass3.default)(Layout, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
-	        _react2.default.createElement("nav", { id: "main-menu" }),
 	        _react2.default.createElement(
-	          "section",
-	          { id: "main-content" },
+	          'nav',
+	          { id: 'main-menu' },
 	          _react2.default.createElement(
-	            "div",
-	            { className: "wrapper" },
+	            _reactRouter.Link,
+	            { to: '/app/articles' },
+	            'Articles'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'section',
+	          { id: 'main-content' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'wrapper' },
 	            _react2.default.cloneElement(this.props.children, (0, _extends3.default)({}, this.props, { key: undefined, ref: undefined }))
 	          )
 	        )
@@ -39846,9 +39856,9 @@
 	var _reactRedux = __webpack_require__(32);
 
 	var getArticle = function getArticle(state) {
-	  var _state$ArticlesReduce = state.ArticlesReducer,
-	      articles = _state$ArticlesReduce.articles,
-	      activeArticleId = _state$ArticlesReduce.activeArticleId;
+	  var _state$articles = state.articles,
+	      articles = _state$articles.articles,
+	      activeArticleId = _state$articles.activeArticleId;
 
 	  return articles.find(function (element) {
 	    return element.id === activeArticleId + '';
@@ -39941,57 +39951,29 @@
 
 	var _editorActions = __webpack_require__(687);
 
+	var _textbox = __webpack_require__(688);
+
+	var _textbox2 = _interopRequireDefault(_textbox);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var TextBox = function (_Component) {
-	  (0, _inherits3.default)(TextBox, _Component);
-
-	  function TextBox(props) {
-	    (0, _classCallCheck3.default)(this, TextBox);
-
-	    var _this = (0, _possibleConstructorReturn3.default)(this, (TextBox.__proto__ || (0, _getPrototypeOf2.default)(TextBox)).call(this, props));
-
-	    _this.state = { value: _this.props.children };
-
-	    _this.handleChange = _this.handleChange.bind(_this);
-	    return _this;
-	  }
-
-	  (0, _createClass3.default)(TextBox, [{
-	    key: 'handleChange',
-	    value: function handleChange(e) {
-	      this.setState({ value: e.value });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'textbox' },
-	        _react2.default.createElement('input', { onChange: this.handleChange, type: 'text', className: 'textbox-content', value: this.state.value })
-	      );
-	    }
-	  }]);
-	  return TextBox;
-	}(_react.Component);
-
-	var Editor = function (_Component2) {
-	  (0, _inherits3.default)(Editor, _Component2);
+	var Editor = function (_Component) {
+	  (0, _inherits3.default)(Editor, _Component);
 
 	  function Editor(props) {
 	    (0, _classCallCheck3.default)(this, Editor);
 
-	    var _this2 = (0, _possibleConstructorReturn3.default)(this, (Editor.__proto__ || (0, _getPrototypeOf2.default)(Editor)).call(this, props));
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (Editor.__proto__ || (0, _getPrototypeOf2.default)(Editor)).call(this, props));
 
-	    _this2.addSection = _this2.addSection.bind(_this2);
-	    _this2.saveSections = _this2.saveSections.bind(_this2);
-	    return _this2;
+	    _this.addSection = _this.addSection.bind(_this);
+	    _this.saveSections = _this.saveSections.bind(_this);
+	    return _this;
 	  }
 
 	  (0, _createClass3.default)(Editor, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      var container = _reactDom2.default.findDOMNode(this);
 	      //Add initial section
@@ -40000,8 +39982,8 @@
 	      dispatch((0, _editorActions.addSection)(2));
 
 	      (0, _reactDragula2.default)([container]).on('drop', function (el) {
-	        var sections = _this3.getSectionTexts();
-	        _this3.props.dispatch((0, _editorActions.saveSections)(sections, 2));
+	        var sections = _this2.getSectionTexts();
+	        _this2.props.dispatch((0, _editorActions.saveSections)(sections, 2));
 	      });
 	    }
 	  }, {
@@ -40050,7 +40032,7 @@
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'editor-container' },
-	          _react2.default.createElement(TextBox, { key: 0, index: 0 }),
+	          _react2.default.createElement(_textbox2.default, { key: 0, index: 0 }),
 	          addButton,
 	          saveButton
 	        );
@@ -40059,9 +40041,14 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'editor-container' },
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'New Article'
+	        ),
 	        this.props.sections.map(function (sectionText, idx) {
 	          return _react2.default.createElement(
-	            TextBox,
+	            _textbox2.default,
 	            { index: idx, key: idx },
 	            sectionText
 	          );
@@ -41340,6 +41327,79 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _getPrototypeOf = __webpack_require__(579);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(605);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(606);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(610);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(657);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _reactDom = __webpack_require__(130);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var TextBox = function (_Component) {
+	  (0, _inherits3.default)(TextBox, _Component);
+
+	  function TextBox(props) {
+	    (0, _classCallCheck3.default)(this, TextBox);
+
+	    var _this = (0, _possibleConstructorReturn3.default)(this, (TextBox.__proto__ || (0, _getPrototypeOf2.default)(TextBox)).call(this, props));
+
+	    _this.state = { value: _this.props.children };
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    return _this;
+	  }
+
+	  (0, _createClass3.default)(TextBox, [{
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      this.setState({ value: e.value });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'textbox' },
+	        _react2.default.createElement('input', { onChange: this.handleChange, type: 'text', className: 'textbox-content', value: this.state.value })
+	      );
+	    }
+	  }]);
+	  return TextBox;
+	}(_react.Component);
+
+	exports.default = TextBox;
+
+/***/ },
+/* 689 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 	exports.default = configureStore;
 
 	var _redux = __webpack_require__(43);
@@ -41352,13 +41412,13 @@
 
 	var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
-	var _articles = __webpack_require__(689);
+	var _articles = __webpack_require__(690);
 
 	var _articles2 = _interopRequireDefault(_articles);
 
-	var _Editor = __webpack_require__(690);
+	var _editor = __webpack_require__(691);
 
-	var _Editor2 = _interopRequireDefault(_Editor);
+	var _editor2 = _interopRequireDefault(_editor);
 
 	var _reactRouterRedux = __webpack_require__(572);
 
@@ -41366,8 +41426,8 @@
 
 	var loggerMiddleware = (0, _reduxLogger2.default)();
 	var reducers = (0, _redux.combineReducers)({
-	  editor: _Editor2.default,
-	  ArticlesReducer: _articles2.default,
+	  editor: _editor2.default,
+	  articles: _articles2.default,
 	  routing: _reactRouterRedux.routerReducer
 	});
 
@@ -41376,7 +41436,7 @@
 	}
 
 /***/ },
-/* 689 */
+/* 690 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41393,7 +41453,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function ArticlesReducer() {
+	function articles() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
 	    articles: [],
 	    isFetching: false,
@@ -41420,10 +41480,10 @@
 	  }
 	}
 
-	exports.default = ArticlesReducer;
+	exports.default = articles;
 
 /***/ },
-/* 690 */
+/* 691 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41432,7 +41492,7 @@
 	  value: true
 	});
 
-	var _toConsumableArray2 = __webpack_require__(691);
+	var _toConsumableArray2 = __webpack_require__(692);
 
 	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
@@ -41475,14 +41535,14 @@
 	exports.default = editor;
 
 /***/ },
-/* 691 */
+/* 692 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	var _from = __webpack_require__(692);
+	var _from = __webpack_require__(693);
 
 	var _from2 = _interopRequireDefault(_from);
 
@@ -41501,34 +41561,34 @@
 	};
 
 /***/ },
-/* 692 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(693), __esModule: true };
-
-/***/ },
 /* 693 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(614);
-	__webpack_require__(694);
-	module.exports = __webpack_require__(592).Array.from;
+	module.exports = { "default": __webpack_require__(694), __esModule: true };
 
 /***/ },
 /* 694 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(614);
+	__webpack_require__(695);
+	module.exports = __webpack_require__(592).Array.from;
+
+/***/ },
+/* 695 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	var ctx            = __webpack_require__(593)
 	  , $export        = __webpack_require__(591)
 	  , toObject       = __webpack_require__(582)
-	  , call           = __webpack_require__(695)
-	  , isArrayIter    = __webpack_require__(696)
+	  , call           = __webpack_require__(696)
+	  , isArrayIter    = __webpack_require__(697)
 	  , toLength       = __webpack_require__(630)
-	  , createProperty = __webpack_require__(697)
-	  , getIterFn      = __webpack_require__(698);
+	  , createProperty = __webpack_require__(698)
+	  , getIterFn      = __webpack_require__(699);
 
-	$export($export.S + $export.F * !__webpack_require__(700)(function(iter){ Array.from(iter); }), 'Array', {
+	$export($export.S + $export.F * !__webpack_require__(701)(function(iter){ Array.from(iter); }), 'Array', {
 	  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
 	  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
 	    var O       = toObject(arrayLike)
@@ -41558,7 +41618,7 @@
 
 
 /***/ },
-/* 695 */
+/* 696 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// call something on iterator step with safe closing on error
@@ -41575,7 +41635,7 @@
 	};
 
 /***/ },
-/* 696 */
+/* 697 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// check on default Array iterator
@@ -41588,7 +41648,7 @@
 	};
 
 /***/ },
-/* 697 */
+/* 698 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41601,10 +41661,10 @@
 	};
 
 /***/ },
-/* 698 */
+/* 699 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var classof   = __webpack_require__(699)
+	var classof   = __webpack_require__(700)
 	  , ITERATOR  = __webpack_require__(635)('iterator')
 	  , Iterators = __webpack_require__(620);
 	module.exports = __webpack_require__(592).getIteratorMethod = function(it){
@@ -41614,7 +41674,7 @@
 	};
 
 /***/ },
-/* 699 */
+/* 700 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// getting tag from 19.1.3.6 Object.prototype.toString()
@@ -41642,7 +41702,7 @@
 	};
 
 /***/ },
-/* 700 */
+/* 701 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ITERATOR     = __webpack_require__(635)('iterator')

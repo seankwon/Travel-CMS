@@ -1,6 +1,6 @@
 import {REQUEST_ARTICLES, RECEIVE_ARTICLES, CHANGE_CURRENT_ARTICLE} from '../actions/articleActions';
 
-function ArticlesReducer(state = {
+function articles(state = {
   articles: [],
   isFetching: false,
   activeArticleId: undefined
@@ -24,4 +24,4 @@ function ArticlesReducer(state = {
   }
 }
 
-export default ArticlesReducer;
+export default articles;

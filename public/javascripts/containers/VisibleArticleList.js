@@ -2,7 +2,7 @@ import {ArticleList} from '../components/articles';
 import {connect} from 'react-redux';
 
 const getArticlesData = (state) => {
-  return state.ArticlesReducer;
+  return state.articles;
 }
 
 function mapStateToProps(state) {

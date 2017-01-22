@@ -3,27 +3,7 @@ import React, { Component } from 'react';
 import dragula from 'react-dragula';
 import { dispatch } from 'redux';
 import { addSection, updateSection, saveSections } from '../actions/editorActions';
-
-class TextBox extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {value: this.props.children}
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(e) {
-    this.setState({value: e.value});
-  }
-
-  render() {
-    return (
-      <div className="textbox">
-        <input onChange={this.handleChange} type="text" className="textbox-content" value={this.state.value} />
-      </div>
-    );
-  }
-}
+import TextBox from './textbox'
 
 export default class Editor extends Component {
   constructor(props) {
@@ -81,6 +61,7 @@ export default class Editor extends Component {
 
     return (
       <div className="editor-container">
+        <h1>New Article</h1>
         {this.props.sections.map((sectionText, idx) =>
           <TextBox index={idx} key={idx}>{sectionText}</TextBox>
         )}
